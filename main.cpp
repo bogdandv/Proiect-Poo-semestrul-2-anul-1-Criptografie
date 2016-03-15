@@ -994,7 +994,7 @@ class  element:public element_interface<Value_from_set>
     }
     ~element()
     {
-        delete this->Field;
+        //delete this->Field;
     }
      element operator +( element second)
     {if(this->Field!=second.Field)
@@ -1034,73 +1034,69 @@ class  element:public element_interface<Value_from_set>
 };
 int main()
 {
-    int tab[5],tab1[5];
-    tab[0]=0;
-    tab[1]=1;
-    tab[2]=1;
-    tab[3]=0;
+    cout<<"What kind of Field?";
+    char *s=new char(1000);
+    cin>>s;
+    if(strcmp(s,"finite")==0)
+    {int n,val,*vect,*vect1;
+        cout<<"How many elements?";
+        cin>>n;
+        vect=new int(n*n+1);
+        for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++)
+            {
+                cout<<i<<"+"<<j<<"=";
+                cin>>val;
+                *(vect+i*n+j)=val;
+            }
+        Finite_Composition_law *fcl=new Finite_Composition_law(n,vect);
+        vect1=new int(n*n+1);
+        for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++)
+            {
+                cout<<i<<"*"<<j<<"=";
+                cin>>val;
+                *(vect1+i*n+j)=val;
+            }
+        Finite_Composition_law *fcl1=new Finite_Composition_law(n,vect1);
+        Finite_Field *ff=new Finite_Field(fcl,fcl1);
+        if(!(*ff).Is_Field())
+            cout<<"NOT A FIELD\n";
+        else cout<<"Is a field\n";
+        cin>>s;
+        element<int> el1(ff,0),el2(ff,0),el3(ff,0);
+        while(strcmp(s,"exit")!=0)
+        {
+            int fv=0,sv=0;
+            int i=0;
+            while(s[i]!='+' && s[i]!='-' && s[i]!='*' && s[i]!='/')
+                  fv=fv*10+s[i++]-'0';
 
-    tab1[0]=0;
-    tab1[1]=0;
-    tab1[2]=0;
-    tab1[3]=1;
-    Finite_Composition_law *fcl=new Finite_Composition_law(2,tab);
-    Finite_Composition_law *fcl1=new Finite_Composition_law(2,tab1);
-    Finite_Field *ff=new Finite_Field(fcl,fcl1);
-   // Finite_Field *ff1=new Finite_Field(fcl,fcl1);
-    //cout<<(e1+e2).value;
-    complexe_Field *cf=new complexe_Field();
-    complex_value c1,c2;
-    c1.real_part=2;
-    c1.imaginary_part=3;
-    c2.real_part=1;
-    c2.imaginary_part=0;
-    element<complex_value> v1(cf,c1);
-    element<complex_value> v2(cf,c2);
-    element<complex_value> v3(cf,c2);
-    v3=v1-v2;
-    cout<<v3.value.real_part<<" "<<v3.value.imaginary_part;
+            int j=i+1;
+            while('0'<=s[j] && s[j]<='9')
+                  sv=sv*10+s[j++]-'0';
+            el1.value=fv;
+            el2.value=sv;
+            if(s[i]=='+')
+                {el3=el1+el2;
+                 cout<<s<<el3.value;
+                }
+            if(s[i]=='-')
+                {el3=el1-el2;
+                 cout<<s<<el3.value;
+                }
+            if(s[i]=='*')
+                {el3=el1*el2;
+                 cout<<s<<el3.value;
+                }
+            if(s[i]=='/')
+                {el3=el1+el2;
+                 cout<<s<<el3.value;
+                }
+            s=new char(1000);
+            cout<<'\n';
+            cin>>s;
+        }
+    }
     return 0;
 }
-
-//template <class Value_form_set>
-/*class Finite_Composition_law:public Composition_law_interface<char*>
-{
-    private:
-    int *Caylay_table;
-    int Number_of_elements;
-    struct pair
-    {char *name;
-    int number;
-    };
-    pair Elements[100];//temporar pana fac o lista
-    public:
-    char* Return_composite(char* First_value,char* Second_value)
-    {int first,second,temp;
-        for(int i=0;i<Number_of_elements;i++)
-        {
-            if( strcmp(Elements[i].name,First_value) )
-                first=i;
-        }
-        for(int i=0;i<Number_of_elements;i++)
-        {
-            if(strcmp(Elements[i].name,Second_value))
-                second=i;
-        }
-        temp=*(Caylay_table+first*Number_of_elements+second);
-        return Elements[temp].name;
-    }
-
-    Finite_Composition_law(int number_of_elements,int *caylay_table,char *names_for_variables[])
-    {   pair temp;
-        Caylay_table=caylay_table;
-        this->Number_of_elements=number_of_elements;
-        for(int i=0;i<this->Number_of_elements;i++)
-        {
-            temp.name= names_for_variables[i];
-            temp.number=i;
-            Elements[i]=temp;
-        }
-    }
-};
-*/
