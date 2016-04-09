@@ -9,6 +9,7 @@ class modulo_Field:public Field_interface<int>
     ~modulo_Field();
     bool Distributive();
     bool Is_Field();
+    int Value_From_String(std::istringstream &s);
 };
 
 #endif // __modulo_Field_h__

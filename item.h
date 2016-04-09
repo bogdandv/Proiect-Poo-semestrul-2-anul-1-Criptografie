@@ -2,12 +2,17 @@
 #define __element_h__
 #include "interface.h"
 #include <iostream>
+#include<string>
 using namespace std;
 template <class Value_from_set>
 class  element:public element_interface<Value_from_set>
 {
     public:
-          element(Field_interface<Value_from_set> *field,Value_from_set value)
+        element(Field_interface<Value_from_set> *field)
+    {
+        this->Field= field;
+    }
+    element(Field_interface<Value_from_set> *field,Value_from_set value)
     {
         this->Field= field;
         this->value=value;
@@ -17,7 +22,8 @@ class  element:public element_interface<Value_from_set>
         //delete this->Field;
     }
      element   operator +( element second)
-    {if(this->Field!=second.Field)
+    {
+        if(this->Field!=second.Field)
             cout<<"Corpuri diferite";
         Value_from_set rez;
         rez=this->Field->Aditive_Group->Composition_law->Return_composite(this->value,second.value);
@@ -51,11 +57,20 @@ class  element:public element_interface<Value_from_set>
             {cout<<"nu divide cu 0!\n";
             return *this;
             }
-        cout<<"!";
+        //cout<<"!";
         rez=this->Field->Multiplicative_Group->Reverse(second.value,this->Field->Aditive_Group->Get_neutral());
         rez=this->Field->Multiplicative_Group->Composition_law->Return_composite(this->value,rez);
          element temp(this->Field,rez);
-        return (*this)*temp;
+        return temp;
+    }
+    element operator =(element second)
+    {
+        this->Field=second.Field;
+        this->value=second.value;
+    }
+    void FromString(istringstream &s)
+    {
+        this->value=this->Field->Value_From_String(s);
     }
 };
 #endif // __element_h__

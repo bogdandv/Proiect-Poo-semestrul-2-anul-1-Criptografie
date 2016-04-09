@@ -11,7 +11,7 @@ using namespace std;
     }
     double Real_Multiplicative_Group::Reverse(double value,double zero)
     {if(value!=0)
-        return 1/value;
+        return ((double)1)/value;
         else {cout<<"!";return 0;}
     }
     double Real_Multiplicative_Group::Get_neutral()

@@ -3,6 +3,8 @@
 
 #include "Real_aditive_group.h"
 #include "Real_multiplicative_group.h"
+#include<string>
+#include<sstream>
 class Real_Field:public Field_interface<double>
 {
     public:
@@ -10,5 +12,6 @@ class Real_Field:public Field_interface<double>
     ~Real_Field();
     bool Distributive();
     bool Is_Field();
+    double Value_From_String(std::istringstream &s);
 };
 #endif // __Real_field_h__

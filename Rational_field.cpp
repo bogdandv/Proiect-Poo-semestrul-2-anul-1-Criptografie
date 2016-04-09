@@ -21,3 +21,12 @@
     {
         return true;
     }
+    rational_value Rational_Field::Value_From_String(std::istringstream &s)
+    {
+        int number;
+        s>>number;
+        rational_value rv;
+        rv.numarator=number;
+        rv.numitor=1;
+        return rv;
+    }

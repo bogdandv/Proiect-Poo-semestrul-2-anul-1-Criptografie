@@ -21,3 +21,9 @@
     {
         return Multiplicative_Group->Inversible(Aditive_Group->Get_neutral());
     }
+    int modulo_Field::Value_From_String(std::istringstream &s)
+    {
+        int number;
+        s>>number;
+        return number%Aditive_Group->Composition_law->Count();
+    }

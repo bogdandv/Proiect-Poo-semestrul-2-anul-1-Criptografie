@@ -1,4 +1,7 @@
 #include "Real_field.h"
+#include<sstream>
+#include<string.h>
+
 Real_Field::Real_Field()
     {
         Real_Adition *aditive_law=new Real_Adition();
@@ -16,6 +19,12 @@ Real_Field::Real_Field()
     bool Real_Field::Distributive()
     {
         return true;
+    }
+    double Real_Field::Value_From_String(std::istringstream &s)
+    {
+        double number;
+        s>>number;
+        return number;
     }
     bool Real_Field::Is_Field()
     {

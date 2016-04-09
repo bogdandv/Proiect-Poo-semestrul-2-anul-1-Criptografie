@@ -1,3 +1,6 @@
+#include <string.h>
+#include<sstream>
+using namespace std;
 #include "Finite_Field.h"
     Finite_Field::Finite_Field(Finite_Composition_law *aditive_law,Finite_Composition_law *multiplicative_law)
     {
@@ -25,6 +28,12 @@
                             return false;
                     }
         return true;
+    }
+    int Finite_Field::Value_From_String(std::istringstream &s)
+    {
+        int number;
+        s>>number;
+        return number;
     }
     bool Finite_Field::Is_Field()
     {
