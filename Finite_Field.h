@@ -11,6 +11,6 @@ class Finite_Field:public Field_interface<int>
     ~Finite_Field();
     bool Distributive();
     bool Is_Field();
-    int Value_From_String(std::istringstream&);
+    int Value_From_String(char *&s);
 };
 #endif // __Finite_field_h__

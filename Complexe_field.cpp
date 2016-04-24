@@ -24,22 +24,25 @@
         return true;
     }
 
-    complex_value complexe_Field::Value_From_String(std::istringstream &s)
+    complex_value complexe_Field::Value_From_String(char *&s)
     {
-        char t;
-        int first;
-        s>>first;
-        complex_value cv;
-        if(s.peek()=='i')
+        int number=0;
+        while(isdigit(*s))
         {
-            s>>t;
-            cv.imaginary_part=first;
+            number=number*10+*s-'0';
+            s++;
+        }
+        complex_value cv;
+        if(*s=='i')
+        {
+            s++;
+            cv.imaginary_part=number;
             cv.real_part=0;
         }
         else
         {
             cv.imaginary_part=0;
-            cv.real_part=first;
+            cv.real_part=number;
         }
         return cv;
     }

@@ -21,10 +21,14 @@
     {
         return true;
     }
-    rational_value Rational_Field::Value_From_String(std::istringstream &s)
+    rational_value Rational_Field::Value_From_String(char *&s)
     {
         int number;
-        s>>number;
+        while(isdigit(*s))
+        {
+            number=number*10+*s-'0';
+            s++;
+        }
         rational_value rv;
         rv.numarator=number;
         rv.numitor=1;

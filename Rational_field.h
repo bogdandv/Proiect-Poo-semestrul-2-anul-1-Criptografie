@@ -9,7 +9,7 @@ class Rational_Field:public Field_interface<rational_value>
     ~Rational_Field();
     bool Distributive();
     bool Is_Field();
-    rational_value Value_From_String(std::istringstream &s);
+    rational_value Value_From_String(char *&s);
 };
 
 #endif // __Rational_field_h__

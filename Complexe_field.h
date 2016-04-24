@@ -9,7 +9,7 @@ class complexe_Field:public Field_interface<complex_value>
     ~complexe_Field();
     bool Distributive();
     bool Is_Field();
-    complex_value Value_From_String(std::istringstream &s);
+    complex_value Value_From_String(char *&s);
 };
 
 #endif // __Complexe_field_h__

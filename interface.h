@@ -69,13 +69,12 @@ Aditive_Group_interface<Value_from_set> *Aditive_Group;
 Multiplcative_Group_interface<Value_from_set> *Multiplicative_Group;
 virtual bool Distributive()=0;
 virtual bool Is_Field()=0;
-virtual Value_from_set Value_From_String(std::istringstream &s)=0;
+virtual Value_from_set Value_From_String(char *&s)=0;
 };
 
 template <class Value_from_set>
 class element_interface
-{
-    public:
+{public:
     Field_interface<Value_from_set> *Field;
     Value_from_set value;
     //overload +,-,*,:

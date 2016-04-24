@@ -15,7 +15,8 @@ using namespace std;
 template<class Value_from_set>
 class Expression_evaluater
 {
-    char *Buffer;
+    //char *Buffer;
+   char * Buffer=new char[100];
     Field_interface<Value_from_set> *field;
     int operator_priority(char op)
     {
@@ -25,38 +26,49 @@ class Expression_evaluater
             return 1;
         return 0;
     }
+
+    istringstream _istringstream;
     void Buffer_to_postfix()
-    {    stack<char> _stack;
+    {  stack<char> _stack;
         char t;
-        istringstream _istringstream(Buffer);
-        char *new_Buffer=new char(strlen(Buffer)*2+1);
+       // cout<<"<?";
+        char *ori=Buffer;
+       // cout<<"|?";
+        char *new_Buffer=new char[100];
         char *begining=new_Buffer;
-        while(!_istringstream.eof())
-        {
-            _istringstream>>t;
+       // cout<<"@";
+        while(*ori!='\0')
+        {//cout<<"\" ";
+            t=*ori;
+            ori++;
             while(t==' ')
-               {
-               _istringstream>>t;
+               {//cout<<"D0";
+               if(*ori!='\0')
+                {t=*ori;
+                    ori++;
+                }
                }
             if(isdigit(t))
-            {
+            {  // cout<<"D1";
                 *new_Buffer=t;
                 new_Buffer++;
-                while(_istringstream.peek()!=' ' && _istringstream.peek()!='+' && _istringstream.peek()!='-' &&_istringstream.peek()!='*' && _istringstream.peek()!='/' && _istringstream.peek()!='(' && _istringstream.peek()!=')' && !_istringstream.eof())
-                {  _istringstream>>t;
+                while(*ori!='\0'&&*ori!=' ' && *ori!='+' && *ori!='-' &&*ori!='*' && *ori!='/' && *ori!='(' && *ori!=')')
+                {  if(*ori!='\0')
+                    {t=*ori;
+                    ori++;
+                    }
                    *new_Buffer=t;
                    new_Buffer++;
-                   //cout<<_istringstream.peek()<<" ";
                 }
                 *new_Buffer=' ';
                 new_Buffer++;
             }
             if(t=='(')
-            {
+            {//cout<<"D2";
                 _stack.push(t);
             }
             if(t==')')
-            {
+            {//cout<<"D3";
                 while(_stack.size()>0 &&_stack.top()!='(')
                 {
                     *new_Buffer=_stack.top();
@@ -67,7 +79,8 @@ class Expression_evaluater
                     _stack.pop();
             }
             if(t=='+' || t=='-'|| t=='*' ||t=='/' )
-            {//cout<<"W8";
+            {
+            //cout<<"D4";
                 if(_stack.size()==0)
                 {
                     _stack.push(t);
@@ -100,11 +113,14 @@ class Expression_evaluater
             _stack.pop();
             new_Buffer++;
         }
+       // cout<<"HERE I AM";
         *new_Buffer='#';
         new_Buffer++;
         *new_Buffer='\0';
         Buffer=begining;
-        cout<<Buffer<<"\n";
+        //cout<<Buffer<<"\n";
+        if(!_stack.empty())
+            cout<<"HELLO";
     }
 public:
     Expression_evaluater(Field_interface<Value_from_set> *myf)
@@ -115,53 +131,63 @@ public:
     {
         char t;
         stack<element<Value_from_set> > _stack;
-        Buffer=expression;
+        strcpy(Buffer,expression);
         Buffer_to_postfix();
-        istringstream _istringstream(Buffer);
+        //cout<<"IOP";
+        char *iter=Buffer;
         int t1;
-        //_istringstream>>t1;
-        //cout<<t1<<"\n";
-        while(!_istringstream.eof())
-        {
-            if(_istringstream.peek()=='#')
+        while(*iter!='\0')
+        {//cout<<"L";
+            if(*iter=='#')
             {
                 break;
             }
-            if(isdigit(_istringstream.peek()))
+            if(isdigit(*iter))
             {
                 Value_from_set el1;
-                el1=field->Value_From_String(_istringstream);
+                //cout<<"beg ";
+                el1=field->Value_From_String(iter);
+                //cout<<" end\n";
 
                 element<Value_from_set> temp(field,el1);
                 _stack.push(temp);
             }
-            if(_istringstream.peek()==' ')
+            if(*iter==' ')
             {
                 //cout<<"!";
-                _istringstream.ignore(1);
+                iter++;
             }
-            if(_istringstream.peek()=='+' || _istringstream.peek()=='-' || _istringstream.peek()=='*' || _istringstream.peek()=='/')
+            if(*iter=='+' || *iter=='-' || *iter=='*' || *iter=='/')
             {//cout<<"?";
-                element<Value_from_set> op1(field),op2(field),temp(field);
+                 element<Value_from_set>  op1(field),op2(field),temp(field);
                 op1=_stack.top();
                 _stack.pop();
                 op2=_stack.top();
                 _stack.pop();
 
-                if(_istringstream.peek()=='+')
+                if(*iter=='+')
                     temp=op2+op1;
-                if(_istringstream.peek()=='-')
+                if(*iter=='-')
                     temp=op2-op1;
-                if(_istringstream.peek()=='*')
+                if(*iter=='*')
                     temp=op2*op1;
-                if(_istringstream.peek()=='/')
+                if(*iter=='/')
                     temp=op2/op1;
                 _stack.push(temp);
-                char r;
-                _istringstream>>r;
+              //  cout<<"I am groot "<<*iter<<"\n";
+                iter++;
+                //cout<<*iter;
             }
         }
-        return _stack.top();
+      //  cout<<"ok\n";
+        element<Value_from_set> op1(field);
+        op1.Set_value(_stack.top().Get_value());
+        while(!_stack.empty())
+            _stack.pop();
+       // cout<<"ok1\n";
+        *expression=NULL;
+        *iter=NULL;
+        return op1;
     }
 };
 
@@ -169,7 +195,7 @@ int main()
 {
     cout<<"!";
     cout<<"What kind of Field?";
-    char *s=new char(1000);
+    char *s=new char[1000];
     cin>>s;
     if(strcmp(s,"finite")==0)
     {int n,val,vect[1000],vect1[1000];
@@ -202,7 +228,7 @@ int main()
         while(!strcmp(s,"exit")==0)
         {
             element<int> a=my_expression_evaluater.Evaluate(s);
-            cout<<a.value<<"\n";
+            cout<<a.Get_value()<<"\n";
             cin.get();
             cin.get(s,1000);
 
@@ -212,12 +238,15 @@ int main()
     {
         Rational_Field *ff=new Rational_Field();
         Expression_evaluater<rational_value> my_expression_evaluater(ff);
+        if(!(*ff).Is_Field())
+            cout<<"NOT A FIELD\n";
+        else cout<<"Is a field\n";
         cin.get();
         cin.get(s,1000);
         while(!strcmp(s,"exit")==0)
         {
             element<rational_value> a=my_expression_evaluater.Evaluate(s);
-            cout<<a.value.numarator<<"/"<<a.value.numitor<<"\n";
+            cout<<a.Get_value().numarator<<"/"<<a.Get_value().numitor<<"\n";
             cin.get();
             cin.get(s,1000);
         }
@@ -226,12 +255,15 @@ int main()
     {
         complexe_Field *ff=new complexe_Field();
         Expression_evaluater<complex_value> my_expression_evaluater(ff);
+        if(!(*ff).Is_Field())
+            cout<<"NOT A FIELD\n";
+        else cout<<"Is a field\n";
         cin.get();
         cin.get(s,1000);
         while(!strcmp(s,"exit")==0)
         {
             element<complex_value> a=my_expression_evaluater.Evaluate(s);
-            cout<<a.value.real_part<<"+"<<a.value.imaginary_part<<"i\n";
+            cout<<a.Get_value().real_part<<"+"<<a.Get_value().imaginary_part<<"i\n";
             cin.get();
             cin.get(s,1000);
         }
@@ -240,11 +272,16 @@ int main()
     {
         Real_Field *ff=new Real_Field();
         Expression_evaluater<double> my_expression_evaluater(ff);
+        if(!(*ff).Is_Field())
+            cout<<"NOT A FIELD\n";
+        else cout<<"Is a field\n";
         cin.get();
         cin.get(s,1000);
         while(!strcmp(s,"exit")==0)
         {
             element<double> a=my_expression_evaluater.Evaluate(s);
+           // cout<<":";
+            //cout<<":";
             cout<<a.value<<"\n";
             cin.get();
             cin.get(s,1000);
@@ -257,12 +294,16 @@ int main()
         cin>>mod;
         modulo_Field *ff=new modulo_Field(mod);
         Expression_evaluater<int> my_expression_evaluater(ff);
+        if(!(*ff).Is_Field())
+            cout<<"NOT A FIELD\n";
+        else cout<<"Is a field\n";
         cin.get();
         cin.get(s,1000);
         while(!strcmp(s,"exit")==0)
         {
             element<int> a=my_expression_evaluater.Evaluate(s);
-            cout<<a.value;
+            cout<<"::\n";
+            cout<<a.Get_value();
             cin.get();
             cin.get(s,1000);
         }

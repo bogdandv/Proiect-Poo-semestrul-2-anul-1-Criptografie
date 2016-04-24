@@ -21,9 +21,13 @@
     {
         return Multiplicative_Group->Inversible(Aditive_Group->Get_neutral());
     }
-    int modulo_Field::Value_From_String(std::istringstream &s)
+    int modulo_Field::Value_From_String(char *&s)
     {
-        int number;
-        s>>number;
+        int number=0;
+        while(isdigit(*s))
+        {
+            number=number*10+*s-'0';
+            s++;
+        }
         return number%Aditive_Group->Composition_law->Count();
     }
